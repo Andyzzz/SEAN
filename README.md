@@ -100,11 +100,13 @@ We provide a convenient code for the users to test images in batches.You need to
     ```
 
 5. Classify the style codes via semantic labels and save in `styles_random3`
-```bash
+
+	```bash
     python style_random.py
     ```
+
 6. Generate the results with random hair styles.
-```bash
+	```bash
     python test_batch.py
     ```
 
