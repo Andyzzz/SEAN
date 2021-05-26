@@ -13,7 +13,7 @@ import cv2
 import skimage.io
 from ui.util import number_color, color_pred
 import qdarkstyle
-import qdarkgraystyle
+# import qdarkgraystyle
 import os
 import numpy as np
 from PyQt5 import QtGui
@@ -120,10 +120,12 @@ class Ex(QWidget, Ui_Form):
 
         if self.obj_dic is not None:
             data_i['obj_dic'] = self.obj_dic
-
+        # print(self.obj_dic.keys())
+        # print(self.obj_dic.values())
 
         generated = self.model(data_i, mode='UI_mode')
         generated_img = self.convert_output_image(generated)
+        generated_img = generated_img.copy()
         qim = QImage(generated_img.data, generated_img.shape[1], generated_img.shape[0], QImage.Format_RGB888)
 
 
@@ -143,8 +145,10 @@ class Ex(QWidget, Ui_Form):
             self.mat_img_path = os.path.join(self.opt.label_dir, os.path.basename(fileName))
 
             # USE CV2 read images, because of using gray scale images, no matter the RGB orders
-
+            print("self.mat_img_path ", self.mat_img_path)
             mat_img = cv2.imread(self.mat_img_path)
+            if np.all(mat_img!=None):
+                mat_img = cv2.imread(self.mat_img_path.replace("jpg", "png"))
             if image.isNull():
                 QMessageBox.information(self, "Image Viewer",
                                         "Cannot load %s." % fileName)
@@ -244,7 +248,7 @@ class Ex(QWidget, Ui_Form):
     def get_single_input(self):
 
         image_path = self.GT_img_path
-        image = self.GT_img
+        # image = self.GT_img
         label_img = self.mat_img[:, :, 0]
 
 
@@ -341,7 +345,8 @@ class Ex(QWidget, Ui_Form):
         input_style_code_folder = 'styles_test/style_codes/' + os.path.basename(self.GT_img_path)
         input_style_dic = {}
         self.label_count = []
-
+        # print("GT_img_path: ", self.GT_img_path)
+        # print("os.path.basename(self.GT_img_path): ", os.path.basename(self.GT_img_path))
 
         self.style_img_mask_dic = {}
 
@@ -449,7 +454,7 @@ class Ex(QWidget, Ui_Form):
             input_style_code_folder = 'styles_test/style_codes/' + os.path.basename(style_img_path)
 
 
-
+        print("status ", self.checkbox_status)
         for i, cb_status in enumerate(self.checkbox_status):
 
 
@@ -457,6 +462,10 @@ class Ex(QWidget, Ui_Form):
                 input_category_folder_list = glob(os.path.join(input_style_code_folder, str(i), '*.npy'))
                 input_category_list = [os.path.splitext(os.path.basename(name))[0] for name in
                                        input_category_folder_list]
+                print("input_category_folder_list: ", input_category_folder_list)
+                print("input_category_list: ", input_category_list)
+                # input_category_folder_list:  ['styles_test/style_codes/28090.jpg/13/ACE.npy']
+                # input_category_list:  ['ACE']
 
                 style_code_path = 'ACE'
                 if style_code_path in input_category_list:
@@ -566,3 +575,4 @@ if __name__ == '__main__':
     ex = ExWindow(opt)
     # ex = Ex(opt)
     sys.exit(app.exec_())
+
