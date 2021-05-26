@@ -75,23 +75,38 @@ python train.py --name [experiment_name] --load_size 256 --crop_size 256 --datas
 If you only have single GPU with small memory, please use `--batchSize 2 --gpu_ids 0`.
 
 
-## UI Introduction
+## Batch Test Introduction
 
-We provide a convenient UI for the users to do some extension works. To run the UI mode, you need to:
+We provide a convenient code for the users to test images in batches.You need to:
 
-1. run the step **Generating Images Using Pretrained Models** to save the style codes of the test images and the mean style codes. Or you can directly download the style codes from [here](https://drive.google.com/file/d/153U5q_CfwPM0V4wRP199BhD9niUuVW95/view?usp=sharing). (Note: if you directly use the downloaded style codes, you have to use the pretrained model.
+1. Create `./checkpoints/` in the main folder and download the tar of the pretrained models from the [Google Drive Folder](https://drive.google.com/file/d/1UMgKGdVqlulfgOBV4Z0ajEwPdgt3_EDK/view?usp=sharing). Save the tar in `./checkpoints/`, then run
 
-2. Put the visualization images of the labels used for generating in `./imgs/colormaps/` and the style images in `./imgs/style_imgs_test/`. Some example images are provided in these 2 folders. Note: the visualization image and the style image should be picked from `./datasets/CelebAMask-HQ/test/vis/` and `./datasets/CelebAMask-HQ/test/labels/`, because only the style codes of the test images are saved in `./styles_test/style_codes/`. If you want to use your own images, please prepare the images, labels and visualization of the labels in `./datasets/CelebAMask-HQ/test/` with the same format, and calculate the corresponding style codes.
-
-3. Run the UI mode
-
-    ```bash
-    python run_UI.py --name CelebA-HQ_pretrained --load_size 256 --crop_size 256 --dataset_mode custom --label_dir datasets/CelebA-HQ/test/labels --image_dir datasets/CelebA-HQ/test/images --label_nc 19 --no_instance --gpu_ids 0
     ```
-4. How to use the UI. Please check the detail usage of the UI from our [Video](https://youtu.be/0Vbj9xFgoUw).
+    cd checkpoints
+    tar CelebA-HQ_pretrained.tar.gz
+    cd ../
+    ```
+2. Set the test options in `options/test_options.py`, put the test images into `datasets/xxx/test_img` and semantic segmentation masks into `datasets/xxx/test_label`.
 
-	[![image](./docs/assets/UI.png)](https://youtu.be/0Vbj9xFgoUw)
+3. Extract the style codes from test images and generate the reconstruction results using the pretrained model.
+	```bash
+   python test.py --name CelebA-HQ_pretrained --load_size 256 --crop_size 256 --dataset_mode custom --label_dir datasets/CelebA-HQ/test_label --image_dir datasets/CelebA-HQ/test_img --label_nc 19 --no_instance --gpu_ids 0
+    ```
 
+4. Pre-calculate the mean style codes for the UI mode. The mean style codes can be found at `./styles_test/mean_style_code/`.
+
+	```bash
+    python calculate_mean_style_code.py
+    ```
+
+5. Classify the style codes via semantic labels and save in `styles_random3`
+```bash
+    python style_random.py
+    ```
+6. Generate the results with random hair styles.
+```bash
+    python test_batch.py
+    ```
 
 
 
