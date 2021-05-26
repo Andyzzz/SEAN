@@ -1,4 +1,6 @@
-# SEAN: Image Synthesis with Semantic Region-Adaptive Normalization (CVPR 2020 Oral)
+# Modified SEAN: get test results in batches instead of UI
+
+## SEAN: Image Synthesis with Semantic Region-Adaptive Normalization (CVPR 2020 Oral)
 
 ![Python 3.7](https://img.shields.io/badge/python-3.7-green.svg?style=plastic)
 ![pytorch 1.2.0](https://img.shields.io/badge/pytorch-1.2.0-green.svg?style=plastic)
